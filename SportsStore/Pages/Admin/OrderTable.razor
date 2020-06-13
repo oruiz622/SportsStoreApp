@@ -52,4 +52,10 @@
 
     [Parameter]
     public IEnumerable<Order> Orders { get; set; }
+
+    [Parameter]
+    public string ButtonLabel { get; set; } = "Ship";
+
+    [Parameter]
+    public EventCallback<int> OrderSelected { get; set; }
 }

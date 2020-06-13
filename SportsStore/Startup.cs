@@ -8,6 +8,7 @@ using Microsoft.Extensions.Hosting;
 using SportsStore.Models;
 using SportsStore.Models.Data;
 using System.Diagnostics.CodeAnalysis;
+using Microsoft.AspNetCore.Identity;
 
 namespace SportsStore
 {
@@ -38,6 +39,12 @@ namespace SportsStore
             services.AddScoped<Cart>(sp => SessionCart.GetCart(sp));
             services.AddSingleton<IHttpContextAccessor, HttpContextAccessor>();
             services.AddServerSideBlazor();
+
+            services.AddDbContext<AppIdentityDbContext>(options =>
+                options.UseSqlServer(
+                    Configuration["ConnectionStrings:IdentityConnection"]));
+
+            services.AddIdentity<IdentityUser, IdentityRole>().AddEntityFrameworkStores<AppIdentityDbContext>();
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
@@ -53,6 +60,9 @@ namespace SportsStore
             app.UseStaticFiles();
             app.UseSession();
             app.UseRouting();
+
+            app.UseAuthentication();
+            app.UseAuthorization();
 
             app.UseEndpoints(endpoints =>
             {
@@ -77,6 +87,11 @@ namespace SportsStore
                 endpoints.MapFallbackToPage("/admin/{*catchall}", "/Admin/Index");
             });
             SeedData.EnsurePopulated(app);
+            // to migrate Identity: dotnet ef migrations add Initial --context AppIdentityDbContext
+            // to update Identity: dotnet ef database update --context AppIdentityDbContext
+            // to reset Database dotnet ef database drop--force--context AppIdentityDbContext
+            IdentitySeedData.EnsurePopulated(app);
+
         }
     }
 }

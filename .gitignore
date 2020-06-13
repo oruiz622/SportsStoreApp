@@ -7,6 +7,9 @@ wwwroot/lib/
 *.min.js
 *.map
 
+# Identity folder
+IdentitySeedData.*
+
 _build/
 _site/
 Properties/

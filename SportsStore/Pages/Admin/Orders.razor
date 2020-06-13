@@ -8,7 +8,7 @@
 <button class="btn btn-info" @onclick="@(e => UpdateData())">Refresh Data</button>
 
 @code {
-    public IOrderRepository Repository { get; set; }
+    public IOrderRepository Repository => Service;
     public IEnumerable<Order> AllOrders { get; set; }
     public IEnumerable<Order> UnshippedOrders { get; set; }
     public IEnumerable<Order> ShippedOrders { get; set; }
